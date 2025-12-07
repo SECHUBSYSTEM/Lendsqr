@@ -1,16 +1,32 @@
 {
-  "name": "demo-credit",
+  "name": "lendsqr-demo-credit",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Demo Credit Wallet Service - MVP wallet service for a mobile lending app",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "migrate": "pnpm knex migrate:latest",
+    "migrate:rollback": "pnpm knex migrate:rollback",
+    "migrate:make": "pnpm knex migrate:make",
+    "seed": "pnpm knex seed:run",
+    "test": "NODE_ENV=test jest",
+    "test:coverage": "NODE_ENV=test jest --coverage",
+    "test:watch": "NODE_ENV=test jest --watch"
   },
-  "keywords": [],
+  "keywords": [
+    "wallet",
+    "lending",
+    "fintech",
+    "nodejs",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.24.0",
   "dependencies": {
+    "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",

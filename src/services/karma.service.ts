@@ -1,6 +1,10 @@
-import axios from 'axios';
-import { config } from '../config';
+import axios, { AxiosError } from "axios";
+import { config } from "../config";
 
+/**
+ * KarmaService - Handles integration with Lendsqr Adjutor Karma blacklist API
+ * Used to verify users are not blacklisted before onboarding
+ */
 export class KarmaService {
   private readonly baseUrl: string;
   private readonly apiKey: string;
@@ -11,8 +15,8 @@ export class KarmaService {
   }
 
   /**
-   * Check if a user identity is blacklisted in the Lendsqr Karma system
-   * @param identity - Email or other identifier to check
+   * Check if a user identity is blacklisted in Lendsqr Karma
+   * @param identity - The identity to check (email, phone number, or BVN)
    * @returns true if blacklisted, false otherwise
    */
   async isBlacklisted(identity: string): Promise<boolean> {
@@ -26,21 +30,29 @@ export class KarmaService {
         }
       );
 
-      // If the API returns data, the user is in the blacklist
-      return response.data?.status === 'success' && !!response.data?.data;
+      // If the API returns data with success status, user is in blacklist
+      return response.data?.status === "success" && !!response.data?.data;
     } catch (error: unknown) {
+      // Handle Axios errors specifically
       if (axios.isAxiosError(error)) {
-        // 404 means user is NOT in blacklist - this is good
-        if (error.response?.status === 404) {
+        const axiosError = error as AxiosError;
+        // 404 means user not found in blacklist (which is good)
+        if (axiosError.response?.status === 404) {
           return false;
         }
-        console.error('Karma API error:', error.message);
+        console.error(
+          "Karma API error:",
+          axiosError.response?.data || axiosError.message
+        );
+      } else if (error instanceof Error) {
+        console.error("Karma API error:", error.message);
       }
-      // For demo purposes, fail open (allow user)
-      // In production, you might want to fail closed (block user) for security
+
+      // Fail open for demo purposes - in production, consider failing closed
       return false;
     }
   }
 }
 
+// Singleton instance
 export const karmaService = new KarmaService();
