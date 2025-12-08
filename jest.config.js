@@ -12,4 +12,5 @@ module.exports = {
   verbose: true,
   testTimeout: 30000,
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+  transformIgnorePatterns: ['node_modules/(?!(uuid)/)'],
 };

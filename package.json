@@ -11,9 +11,9 @@
     "migrate:rollback": "pnpm knex migrate:rollback",
     "migrate:make": "pnpm knex migrate:make",
     "seed": "pnpm knex seed:run",
-    "test": "NODE_ENV=test jest",
-    "test:coverage": "NODE_ENV=test jest --coverage",
-    "test:watch": "NODE_ENV=test jest --watch"
+    "test": "cross-env NODE_ENV=test jest",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage",
+    "test:watch": "cross-env NODE_ENV=test jest --watch"
   },
   "keywords": [
     "wallet",
