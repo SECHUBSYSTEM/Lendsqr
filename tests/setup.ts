@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 // Load environment variables
 dotenv.config();
 
+process.env.NODE_ENV = process.env.NODE_ENV || "test";
+process.env.ADJUTOR_MOCK_BLACKLIST = "true";
+
 // Set default timeout
 jest.setTimeout(30000);
 

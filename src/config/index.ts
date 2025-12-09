@@ -19,5 +19,11 @@ export const config = {
     baseUrl: process.env.ADJUTOR_BASE_URL || "https://adjutor.lendsqr.com/v2",
     apiKey: process.env.ADJUTOR_API_KEY || "",
     appId: process.env.ADJUTOR_APP_ID || "",
+    mockBlacklist:
+      (process.env.ADJUTOR_MOCK_BLACKLIST || "true").toLowerCase() !== "false",
+    mockListedIdentities: (process.env.ADJUTOR_MOCK_BLACKLIST_IDENTITIES || "")
+      .split(",")
+      .map((id) => id.trim())
+      .filter(Boolean),
   },
 };

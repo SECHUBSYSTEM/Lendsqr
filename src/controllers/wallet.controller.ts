@@ -40,11 +40,18 @@ export class WalletController {
       const userId = req.user!.id;
       const { amount, description } = req.body;
 
-      if (!amount || typeof amount !== "number") {
-        throw new BadRequestError("Amount is required and must be a number");
+      const numericAmount = Number(amount);
+      if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+        throw new BadRequestError(
+          "Amount is required and must be a positive number"
+        );
       }
 
-      const transaction = await walletService.fund(userId, amount, description);
+      const transaction = await walletService.fund(
+        userId,
+        numericAmount,
+        description
+      );
 
       successResponse(res, "Wallet funded successfully", { transaction });
     } catch (error) {
@@ -65,18 +72,21 @@ export class WalletController {
       const userId = req.user!.id;
       const { recipientEmail, amount, description } = req.body;
 
-      if (!recipientEmail || !amount) {
-        throw new BadRequestError("Recipient email and amount are required");
-      }
-
-      if (typeof amount !== "number") {
-        throw new BadRequestError("Amount must be a number");
+      const numericAmount = Number(amount);
+      if (
+        !recipientEmail ||
+        !Number.isFinite(numericAmount) ||
+        numericAmount <= 0
+      ) {
+        throw new BadRequestError(
+          "Recipient email and a positive amount are required"
+        );
       }
 
       const transaction = await walletService.transfer(
         userId,
         recipientEmail,
-        amount,
+        numericAmount,
         description
       );
 
@@ -99,13 +109,16 @@ export class WalletController {
       const userId = req.user!.id;
       const { amount, description } = req.body;
 
-      if (!amount || typeof amount !== "number") {
-        throw new BadRequestError("Amount is required and must be a number");
+      const numericAmount = Number(amount);
+      if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+        throw new BadRequestError(
+          "Amount is required and must be a positive number"
+        );
       }
 
       const transaction = await walletService.withdraw(
         userId,
-        amount,
+        numericAmount,
         description
       );
 
@@ -126,8 +139,11 @@ export class WalletController {
   ): Promise<void> {
     try {
       const userId = req.user!.id;
-      const limit = parseInt(req.query.limit as string) || 20;
-      const offset = parseInt(req.query.offset as string) || 0;
+      const limit = Math.min(
+        100,
+        Math.max(1, parseInt(req.query.limit as string, 10) || 20)
+      );
+      const offset = Math.max(0, parseInt(req.query.offset as string, 10) || 0);
 
       const transactions = await walletService.getTransactions(
         userId,

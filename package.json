@@ -7,6 +7,8 @@
     "dev": "nodemon src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "render-build": "pnpm run build",
+    "render-start": "node dist/server.js",
     "migrate": "pnpm knex migrate:latest",
     "migrate:rollback": "pnpm knex migrate:rollback",
     "migrate:make": "pnpm knex migrate:make",
@@ -50,6 +52,6 @@
     "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   }
 }

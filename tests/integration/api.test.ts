@@ -47,6 +47,18 @@ describe("Wallet API Integration Tests", () => {
     expect(res.body.status).toBe("success");
   });
 
+  it("should block onboarding when identity is blacklisted (mocked)", async () => {
+    const res = await request(app).post("/api/auth/register").send({
+      email: "blacklisted-user@example.com",
+      password: "password123",
+      firstName: "Black",
+      lastName: "Listed",
+    });
+
+    expect(res.status).toBe(409);
+    expect(res.body.message).toMatch(/blacklisted/i);
+  });
+
   it("should complete a full wallet flow: register -> fund -> transfer -> withdraw", async () => {
     // 1. Register User A
     const resRegisterA = await request(app)
